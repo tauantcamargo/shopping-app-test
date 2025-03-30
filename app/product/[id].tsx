@@ -1,6 +1,7 @@
 import {
 	Platform,
 	ScrollView,
+	Share,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
@@ -27,10 +28,6 @@ const Page = () => {
 		queryFn: () => getProduct(id as string),
 	});
 
-	const onShare = () => {
-		console.log("share");
-	};
-
 	if (isLoading) {
 		return <ProductDetailsShimmer />;
 	}
@@ -41,6 +38,20 @@ const Page = () => {
 
 	const handleAddToCart = () => {
 		addProduct(product);
+	};
+
+	const onShare = async () => {
+		const url = `shoppingapp://product/${product.id}`;
+		if (Platform.OS === "ios") {
+			await Share.share({
+				url,
+				message: `Check out this product on Galaxies Shop: ${url}`,
+			});
+		} else {
+			await Share.share({
+				message: `Check out this product on Galaxies Shop: ${url}`,
+			});
+		}
 	};
 
 	return (

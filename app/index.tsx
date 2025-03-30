@@ -1,11 +1,11 @@
 import {
 	ActivityIndicator,
+	Button,
 	FlatList,
 	Pressable,
 	RefreshControl,
 	StyleSheet,
 	Text,
-	TextInput,
 	View,
 } from "react-native";
 import { useQuery } from "@tanstack/react-query";
@@ -17,6 +17,7 @@ import { COLORS } from "@/shared/constants/Colors";
 import { Stack } from "expo-router";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { ProductShimmerGrid } from "@/domains/products/components/ProductShimmer";
+import * as Sentry from "@sentry/react-native";
 
 const Index = () => {
 	const headerHeight = useHeaderHeight();
@@ -96,6 +97,14 @@ const Index = () => {
 					},
 				}}
 			/>
+
+			<Button
+				title="Try!"
+				onPress={() => {
+					Sentry.captureException(new Error("First error"));
+				}}
+			/>
+
 			{isCategoriesLoading ? (
 				<ActivityIndicator color={COLORS.primary} size="large" />
 			) : (
