@@ -3,8 +3,10 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { zustandStorage } from "@/shared/store/mmkv";
 
+export type CartProduct = Product & { quantity: number };
+
 export type CartState = {
-	products: Array<Product & { quantity: number }>;
+	products: Array<CartProduct>;
 	total: number;
 	count: number;
 	addProduct: (product: Product) => void;
