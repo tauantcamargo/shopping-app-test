@@ -7,6 +7,7 @@ import { storage } from "@/shared/store/mmkv";
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/shared/constants/Colors";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -24,53 +25,55 @@ export default function RootLayout() {
 
 	return (
 		<QueryClientProvider client={queryClient}>
-			<Stack>
-				<Stack.Screen
-					name="index"
-					options={{
-						title: "Bunch Products",
-						headerShadowVisible: false,
-						headerRight: () => <CartButton />,
-						headerSearchBarOptions: {
-							placeholder: "Search Products",
-							hideWhenScrolling: false,
-							hideNavigationBar: false,
-						},
-					}}
-				/>
+			<GestureHandlerRootView style={{ flex: 1 }}>
+				<Stack>
+					<Stack.Screen
+						name="index"
+						options={{
+							title: "Bunch Products",
+							headerShadowVisible: false,
+							headerRight: () => <CartButton />,
+							headerSearchBarOptions: {
+								placeholder: "Search Products",
+								hideWhenScrolling: false,
+								hideNavigationBar: false,
+							},
+						}}
+					/>
 
-				<Stack.Screen
-					name="product/[id]"
-					options={{
-						title: "Product",
-						headerShadowVisible: false,
-						headerBackTitle: "Products",
-					}}
-				/>
+					<Stack.Screen
+						name="product/[id]"
+						options={{
+							title: "Product",
+							headerShadowVisible: false,
+							headerBackTitle: "Products",
+						}}
+					/>
 
-				<Stack.Screen
-					name="cart"
-					options={{
-						title: "Your Cart",
-						presentation: "modal",
-						headerShadowVisible: false,
-						contentStyle: {
-							backgroundColor: "white",
-						},
-						headerLeft: () => (
-							<Pressable onPress={() => router.dismiss()}>
-								<Ionicons name="close" size={24} color="white" />
-							</Pressable>
-						),
-						headerStyle: {
-							backgroundColor: COLORS.primary,
-						},
-						headerTitleStyle: {
-							color: "white",
-						},
-					}}
-				/>
-			</Stack>
+					<Stack.Screen
+						name="cart"
+						options={{
+							title: "Your Cart",
+							presentation: "modal",
+							headerShadowVisible: false,
+							contentStyle: {
+								backgroundColor: "white",
+							},
+							headerLeft: () => (
+								<Pressable onPress={() => router.dismiss()}>
+									<Ionicons name="close" size={24} color="white" />
+								</Pressable>
+							),
+							headerStyle: {
+								backgroundColor: COLORS.primary,
+							},
+							headerTitleStyle: {
+								color: "white",
+							},
+						}}
+					/>
+				</Stack>
+			</GestureHandlerRootView>
 		</QueryClientProvider>
 	);
 }
