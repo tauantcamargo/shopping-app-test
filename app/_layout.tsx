@@ -1,39 +1,45 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { Stack } from "expo-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useReactQueryDevTools } from "@dev-plugins/react-query";
+import CartButton from "@/domains/cart/components/CartButton";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			staleTime: 60 * 1000,
+		},
+	},
+});
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+	useReactQueryDevTools(queryClient);
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+	return (
+		<QueryClientProvider client={queryClient}>
+			<Stack>
+				<Stack.Screen
+					name="index"
+					options={{
+						title: "Bunch Products",
+						headerShadowVisible: false,
+						headerRight: () => <CartButton />,
+						headerSearchBarOptions: {
+							placeholder: "Search Products",
+							hideWhenScrolling: false,
+							hideNavigationBar: false,
+						},
+					}}
+				/>
 
-  if (!loaded) {
-    return null;
-  }
-
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+				<Stack.Screen
+					name="product/[id]"
+					options={{
+						title: "Product",
+						headerShadowVisible: false,
+						headerBackTitle: "Products",
+					}}
+				/>
+			</Stack>
+		</QueryClientProvider>
+	);
 }
